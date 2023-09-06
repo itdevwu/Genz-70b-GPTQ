@@ -33,19 +33,24 @@ quantized_by: TheBloke
 - Model creator: [Bud](https://huggingface.co/budecosystem)
 - Original model: [GenZ 70B](https://huggingface.co/budecosystem/genz-70b)
 
+<!-- description start -->
 ## Description
 
 This repo contains GPTQ model files for [Bud's GenZ 70B](https://huggingface.co/budecosystem/genz-70b).
 
 Multiple GPTQ parameter permutations are provided; see Provided Files below for details of the options provided, their parameters, and the software used to create them.
 
+<!-- description end -->
+<!-- repositories-available start -->
 ## Repositories available
 
 * [GPTQ models for GPU inference, with multiple quantisation parameter options.](https://huggingface.co/TheBloke/Genz-70b-GPTQ)
 * [2, 3, 4, 5, 6 and 8-bit GGUF models for CPU+GPU inference](https://huggingface.co/TheBloke/Genz-70b-GGUF)
 * [2, 3, 4, 5, 6 and 8-bit GGML models for CPU+GPU inference (deprecated)](https://huggingface.co/TheBloke/Genz-70b-GGML)
 * [Bud's original unquantised fp16 model in pytorch format, for GPU inference and for further conversions](https://huggingface.co/budecosystem/genz-70b)
+<!-- repositories-available end -->
 
+<!-- prompt-template start -->
 ## Prompt template: User-Assistant-Newlines
 
 ```
@@ -56,20 +61,23 @@ Multiple GPTQ parameter permutations are provided; see Provided Files below for 
 
 ```
 
+<!-- prompt-template end -->
+
+<!-- README_GPTQ.md-provided-files start -->
 ## Provided files and GPTQ parameters
 
 Multiple quantisation parameters are provided, to allow you to choose the best one for your hardware and requirements.
 
 Each separate quant is in a different branch.  See below for instructions on fetching from different branches.
 
-All GPTQ files are made with AutoGPTQ.
+All recent GPTQ files are made with AutoGPTQ, and all files in non-main branches are made with AutoGPTQ. Files in the `main` branch which were uploaded before August 2023 were made with GPTQ-for-LLaMa.
 
 <details>
   <summary>Explanation of GPTQ parameters</summary>
 
 - Bits: The bit size of the quantised model.
 - GS: GPTQ group size. Higher numbers use less VRAM, but have lower quantisation accuracy. "None" is the lowest possible value.
-- Act Order: True or False. Also known as `desc_act`. True results in better quantisation accuracy. Some GPTQ clients have issues with models that use Act Order plus Group Size.
+- Act Order: True or False. Also known as `desc_act`. True results in better quantisation accuracy. Some GPTQ clients have had issues with models that use Act Order plus Group Size, but this is generally resolved now.
 - Damp %: A GPTQ parameter that affects how samples are processed for quantisation. 0.01 is default, but 0.1 results in slightly better accuracy.
 - GPTQ dataset: The dataset used for quantisation. Using a dataset more appropriate to the model's training can improve quantisation accuracy. Note that the GPTQ dataset is not the same as the dataset used to train the model - please refer to the original model repo for details of the training dataset(s).
 - Sequence Length: The length of the dataset sequences used for quantisation. Ideally this is the same as the model sequence length. For some very long sequence models (16+K), a lower sequence length may have to be used.  Note that a lower sequence length does not limit the sequence length of the quantised model. It only impacts the quantisation accuracy on longer inference sequences.
@@ -84,6 +92,9 @@ All GPTQ files are made with AutoGPTQ.
 | [gptq-3bit--1g-actorder_True](https://huggingface.co/TheBloke/Genz-70b-GPTQ/tree/gptq-3bit--1g-actorder_True) | 3 | None | Yes | 0.1 | [wikitext](https://huggingface.co/datasets/wikitext/viewer/wikitext-2-v1/test) | 4096 | 26.77 GB | No | 3-bit, with Act Order and no group size. Lowest possible VRAM requirements. May be lower quality than 3-bit 128g. | 
 | [gptq-3bit-128g-actorder_True](https://huggingface.co/TheBloke/Genz-70b-GPTQ/tree/gptq-3bit-128g-actorder_True) | 3 | 128 | Yes | 0.1 | [wikitext](https://huggingface.co/datasets/wikitext/viewer/wikitext-2-v1/test) | 4096 | 28.03 GB | No | 3-bit, with group size 128g and act-order. Higher quality than 128g-False but poor AutoGPTQ CUDA speed. |
 
+<!-- README_GPTQ.md-provided-files end -->
+
+<!-- README_GPTQ.md-download-from-branches start -->
 ## How to download from branches
 
 - In text-generation-webui, you can add `:branch` to the end of the download name, eg `TheBloke/Genz-70b-GPTQ:gptq-4bit-32g-actorder_True`
@@ -92,72 +103,71 @@ All GPTQ files are made with AutoGPTQ.
 git clone --single-branch --branch gptq-4bit-32g-actorder_True https://huggingface.co/TheBloke/Genz-70b-GPTQ
 ```
 - In Python Transformers code, the branch is the `revision` parameter; see below.
-
+<!-- README_GPTQ.md-download-from-branches end -->
+<!-- README_GPTQ.md-text-generation-webui start -->
 ## How to easily download and use this model in [text-generation-webui](https://github.com/oobabooga/text-generation-webui).
 
 Please make sure you're using the latest version of [text-generation-webui](https://github.com/oobabooga/text-generation-webui).
 
-It is strongly recommended to use the text-generation-webui one-click-installers unless you know how to make a manual install.
+It is strongly recommended to use the text-generation-webui one-click-installers unless you're sure you know how to make a manual install.
 
 1. Click the **Model tab**.
 2. Under **Download custom model or LoRA**, enter `TheBloke/Genz-70b-GPTQ`.
   - To download from a specific branch, enter for example `TheBloke/Genz-70b-GPTQ:gptq-4bit-32g-actorder_True`
   - see Provided Files above for the list of branches for each option.
 3. Click **Download**.
-4. The model will start downloading. Once it's finished it will say "Done"
+4. The model will start downloading. Once it's finished it will say "Done".
 5. In the top left, click the refresh icon next to **Model**.
 6. In the **Model** dropdown, choose the model you just downloaded: `Genz-70b-GPTQ`
 7. The model will automatically load, and is now ready for use!
 8. If you want any custom settings, set them and then click **Save settings for this model** followed by **Reload the Model** in the top right.
-  * Note that you do not need to set GPTQ parameters any more. These are set automatically from the file `quantize_config.json`.
+  * Note that you do not need to and should not set manual GPTQ parameters any more. These are set automatically from the file `quantize_config.json`.
 9. Once you're ready, click the **Text Generation tab** and enter a prompt to get started!
+<!-- README_GPTQ.md-text-generation-webui end -->
 
+<!-- README_GPTQ.md-use-from-python start -->
 ## How to use this GPTQ model from Python code
 
-First make sure you have [AutoGPTQ](https://github.com/PanQiWei/AutoGPTQ) 0.3.1 or later installed:
+### Install the necessary packages
 
-```
-pip3 install auto-gptq
+Requires: Transformers 4.32.0 or later, Optimum 1.12.0 or later, and AutoGPTQ 0.4.2 or later.
+
+```shell
+pip3 install transformers>=4.32.0 optimum>=1.12.0
+pip3 install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/  # Use cu117 if on CUDA 11.7
 ```
 
-If you have problems installing AutoGPTQ, please build from source instead:
-```
+If you have problems installing AutoGPTQ using the pre-built wheels, install it from source instead:
+
+```shell
 pip3 uninstall -y auto-gptq
 git clone https://github.com/PanQiWei/AutoGPTQ
 cd AutoGPTQ
 pip3 install .
 ```
 
-Then try the following example code:
+### For CodeLlama models only: you must use Transformers 4.33.0 or later.
+
+If 4.33.0 is not yet released when you read this, you will need to install Transformers from source:
+```shell
+pip3 uninstall -y transformers
+pip3 install git+https://github.com/huggingface/transformers.git
+```
+
+### You can then use the following code
 
 ```python
-from transformers import AutoTokenizer, pipeline, logging
-from auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
 model_name_or_path = "TheBloke/Genz-70b-GPTQ"
-
-use_triton = False
+# To use a different branch, change revision
+# For example: revision="gptq-4bit-32g-actorder_True"
+model = AutoModelForCausalLM.from_pretrained(model_name_or_path,
+                                             torch_dtype=torch.bfloat16,
+                                             device_map="auto",
+                                             revision="main")
 
 tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
-
-model = AutoGPTQForCausalLM.from_quantized(model_name_or_path,
-        use_safetensors=True,
-        trust_remote_code=False,
-        device="cuda:0",
-        use_triton=use_triton,
-        quantize_config=None)
-
-"""
-# To download from a specific branch, use the revision parameter, as in this example:
-# Note that `revision` requires AutoGPTQ 0.3.1 or later!
-
-model = AutoGPTQForCausalLM.from_quantized(model_name_or_path,
-        revision="gptq-4bit-32g-actorder_True",
-        use_safetensors=True,
-        trust_remote_code=False,
-        device="cuda:0",
-        quantize_config=None)
-"""
 
 prompt = "Tell me about AI"
 prompt_template=f'''### User:
@@ -175,9 +185,6 @@ print(tokenizer.decode(output[0]))
 
 # Inference can also be done using transformers' pipeline
 
-# Prevent printing spurious transformers error when using pipeline with AutoGPTQ
-logging.set_verbosity(logging.CRITICAL)
-
 print("*** Pipeline:")
 pipe = pipeline(
     "text-generation",
@@ -191,12 +198,17 @@ pipe = pipeline(
 
 print(pipe(prompt_template)[0]['generated_text'])
 ```
+<!-- README_GPTQ.md-use-from-python end -->
 
+<!-- README_GPTQ.md-compatibility start -->
 ## Compatibility
 
-The files provided will work with AutoGPTQ (CUDA and Triton modes), GPTQ-for-LLaMa (only CUDA has been tested), and Occ4m's GPTQ-for-LLaMa fork.
+The files provided are tested to work with AutoGPTQ, both via Transformers and using AutoGPTQ directly. They should also work with [Occ4m's GPTQ-for-LLaMa fork](https://github.com/0cc4m/KoboldAI).
 
-ExLlama works with Llama models in 4-bit. Please see the Provided Files table above for per-file compatibility.
+[ExLlama](https://github.com/turboderp/exllama) is compatible with Llama models in 4-bit. Please see the Provided Files table above for per-file compatibility.
+
+[Huggingface Text Generation Inference (TGI)](https://github.com/huggingface/text-generation-inference) is compatible with all GPTQ models.
+<!-- README_GPTQ.md-compatibility end -->
 
 <!-- footer start -->
 <!-- 200823 -->
@@ -221,7 +233,7 @@ Donaters will get priority support on any and all AI/LLM/model questions and req
 
 **Special thanks to**: Aemon Algiz.
 
-**Patreon special mentions**: Kacper Wikieł, knownsqashed, Leonard Tan, Asp the Wyvern, Daniel P. Andersen, Luke Pendergrass, Stanislav Ovsiannikov, RoA, Dave, Ai Maven, Kalila, Will Dee, Imad Khwaja, Nitin Borwankar, Joseph William Delisle, Tony Hughes, Cory Kujawski, Rishabh Srivastava, Russ Johnson, Stephen Murray, Lone Striker, Johann-Peter Hartmann, Elle, J, Deep Realms, SuperWojo, Raven Klaugh, Sebastain Graf, ReadyPlayerEmma, Alps Aficionado, Mano Prime, Derek Yates, Gabriel Puliatti, Mesiah Bishop, Magnesian, Sean Connelly, biorpg, Iucharbius, Olakabola, Fen Risland, Space Cruiser, theTransient, Illia Dulskyi, Thomas Belote, Spencer Kim, Pieter, John Detwiler, Fred von Graf, Michael Davis, Swaroop Kallakuri, subjectnull, Clay Pascal, Subspace Studios, Chris Smitley, Enrico Ros, usrbinkat, Steven Wood, alfie_i, David Ziegler, Willem Michiel, Matthew Berman, Andrey, Pyrater, Jeffrey Morgan, vamX, LangChain4j, Luke @flexchar, Trenton Dambrowitz, Pierre Kircher, Alex, Sam, James Bentley, Edmond Seymore, Eugene Pentland, Pedro Madruga, Rainer Wilmers, Dan Guido, Nathan LeClaire, Spiking Neurons AB, Talal Aujan, zynix, Artur Olbinski, Michael Levine, 阿明, K, John Villwock, Nikolai Manek, Femi Adebogun, senxiiz, Deo Leter, NimbleBox.ai, Viktor Bowallius, Geoffrey Montalvo, Mandus, Ajan Kanaga, ya boyyy, Jonathan Leane, webtim, Brandon Frisco, danny, Alexandros Triantafyllidis, Gabriel Tamborski, Randy H, terasurfer, Vadim, Junyu Yang, Vitor Caleffi, Chadd, transmissions 11
+**Patreon special mentions**: Russ Johnson, J, alfie_i, Alex, NimbleBox.ai, Chadd, Mandus, Nikolai Manek, Ken Nordquist, ya boyyy, Illia Dulskyi, Viktor Bowallius, vamX, Iucharbius, zynix, Magnesian, Clay Pascal, Pierre Kircher, Enrico Ros, Tony Hughes, Elle, Andrey, knownsqashed, Deep Realms, Jerry Meng, Lone Striker, Derek Yates, Pyrater, Mesiah Bishop, James Bentley, Femi Adebogun, Brandon Frisco, SuperWojo, Alps Aficionado, Michael Dempsey, Vitor Caleffi, Will Dee, Edmond Seymore, usrbinkat, LangChain4j, Kacper Wikieł, Luke Pendergrass, John Detwiler, theTransient, Nathan LeClaire, Tiffany J. Kim, biorpg, Eugene Pentland, Stanislav Ovsiannikov, Fred von Graf, terasurfer, Kalila, Dan Guido, Nitin Borwankar, 阿明, Ai Maven, John Villwock, Gabriel Puliatti, Stephen Murray, Asp the Wyvern, danny, Chris Smitley, ReadyPlayerEmma, S_X, Daniel P. Andersen, Olakabola, Jeffrey Morgan, Imad Khwaja, Caitlyn Gatomon, webtim, Alicia Loh, Trenton Dambrowitz, Swaroop Kallakuri, Erik Bjäreholt, Leonard Tan, Spiking Neurons AB, Luke @flexchar, Ajan Kanaga, Thomas Belote, Deo Leter, RoA, Willem Michiel, transmissions 11, subjectnull, Matthew Berman, Joseph William Delisle, David Ziegler, Michael Davis, Johann-Peter Hartmann, Talal Aujan, senxiiz, Artur Olbinski, Rainer Wilmers, Spencer Kim, Fen Risland, Cap'n Zoog, Rishabh Srivastava, Michael Levine, Geoffrey Montalvo, Sean Connelly, Alexandros Triantafyllidis, Pieter, Gabriel Tamborski, Sam, Subspace Studios, Junyu Yang, Pedro Madruga, Vadim, Cory Kujawski, K, Raven Klaugh, Randy H, Mano Prime, Sebastain Graf, Space Cruiser
 
 
 Thank you to all my generous patrons and donaters!
@@ -246,7 +258,7 @@ And thank you again to a16z for their generous grant.
 
 Welcome to **GenZ**, an advanced Large Language Model (LLM) fine-tuned on the foundation of Meta's open-source Llama V2 70B parameter model. At Bud Ecosystem, we believe in the power of open-source collaboration to drive the advancement of technology at an accelerated pace. Our vision is to democratize access to fine-tuned LLMs, and to that end, we will be releasing a series of models across different parameter counts (7B, 13B, and 70B) and quantizations (32-bit and 4-bit) for the open-source community to use, enhance, and build upon. 
 
-<p align="center"><img src="https://raw.githubusercontent.com/BudEcosystem/GenZ/main/assets/MTBench_CompareChart_28July2023.png" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/BudEcosystem/GenZ/main/assets/mt_bench_compare.png" width="500"></p>
 
 The smaller quantization version of our models makes them more accessible, enabling their use even on personal computers. This opens up a world of possibilities for developers, researchers, and enthusiasts to experiment with these models and contribute to the collective advancement of language model technology. 
 
@@ -275,6 +287,28 @@ And this isn't the end. It's just the beginning of a journey towards creating mo
 
 ---
 
+<h2>Evaluations 🎯</h2>
+
+Evaluating our model is a key part of our fine-tuning process. It helps us understand how our model is performing and how it stacks up against other models. Here's a look at some of the key evaluations for GenZ 70B:
+
+<h3>Benchmark Comparison</h3>
+
+We've compared GenZ models to understand the improvements our fine-tuning has achieved.
+
+| Model Name | MT Bench | MMLU | Human Eval | BBH |
+|:----------:|:--------:|:----:|:----------:|:----:|
+| Genz 13B   | 6.12     | 53.62| 17.68      | 37.76|
+| Genz 13B v2| 6.79     | 53.68| 21.95      | 38.1 |
+| Genz 70B   | 7.33     | 70.32| 37.8       |54.69 |
+
+<h3>MT Bench Score</h3>
+
+A key evaluation metric we use is the MT Bench score. This score provides a comprehensive assessment of our model's performance across a range of tasks.
+
+<p align="center"><img src="https://raw.githubusercontent.com/BudEcosystem/GenZ/main/assets/mt_bench_score.png" width="500"></p>
+
+
+---
 
 <h2>Getting Started on Hugging Face 🤗</h2>
 
@@ -384,29 +418,6 @@ Here are the hyperparameters we used for fine-tuning:
 | Gradient Accumulation Steps | 4 |
 | Precision | FP16 |
 | Optimizer | AdamW |
-
----
-
-<h2>Evaluations 🎯</h2>
-
-Evaluating our model is a key part of our fine-tuning process. It helps us understand how our model is performing and how it stacks up against other models. Here's a look at some of the key evaluations for GenZ 70B:
-
-<h3>Benchmark Comparison</h3>
-
-We've compared GenZ models to understand the improvements our fine-tuning has achieved.
-
-| Model Name | MT Bench | MMLU | Human Eval | Hellaswag | BBH |
-|:----------:|:--------:|:----:|:----------:|:---------:|:----:|
-| Genz 13B   | 6.12     | 53.62| 17.68      | 77.38     | 37.76|
-| Genz 13B v2| 6.79     | 53.68| 21.95      | 77.48     | 38.1 |
-| Genz 70B   | 7.33     | 70.32|            |           |      |
-
-<h3>MT Bench Score</h3>
-
-A key evaluation metric we use is the MT Bench score. This score provides a comprehensive assessment of our model's performance across a range of tasks.
-
-<p align="center"><img src="https://raw.githubusercontent.com/BudEcosystem/GenZ/main/assets/mt_bench_score.png" width="500"></p>
-
 
 ---
 
