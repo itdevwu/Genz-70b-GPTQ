@@ -1,12 +1,12 @@
 ---
-base_model: https://huggingface.co/budecosystem/genz-70b
-inference: false
 language:
 - en
-library_name: transformers
 license: llama2
-model_creator: Bud
+library_name: transformers
 model_name: GenZ 70B
+base_model: budecosystem/genz-70b
+inference: false
+model_creator: Bud
 model_type: llama
 pipeline_tag: text-generation
 prompt_template: '### User:
